@@ -8,4 +8,4 @@ load_dotenv(dotenv_path=env_path)
 
 client = slack.WebClient(token=os.environ['SLACK_TOKEN']) #part of the slack api 
 
-client.chat_postMessage(channel='#general', text="you are what you don't poop")
+client.chat_postMessage(channel='#test', text="you are what you don't poop")
