@@ -2,10 +2,18 @@ import slack
 import os 
 from pathlib import Path
 from dotenv import load_dotenv
+from flask import Flask
+from slackeventsapi import SlackEventAdapter
 
 env_path = Path('.') / '.env' #current directory 
 load_dotenv(dotenv_path=env_path)
 
-client = slack.WebClient(token=os.environ['SLACK_TOKEN']) #part of the slack api 
 
+app = Flask(__name__)
+slack_events_adapter = SlackEventAdapter(os.environ['SIGNING_SECRET'],'/slack/events',app)
+
+client = slack.WebClient(token=os.environ['SLACK_TOKEN']) #part of the slack api 
 client.chat_postMessage(channel='#test', text="you are what you don't poop")
+
+if (__name__) == "__main__":
+    app.run(debug=True)
