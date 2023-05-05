@@ -13,7 +13,16 @@ app = Flask(__name__)
 slack_events_adapter = SlackEventAdapter(os.environ['SIGNING_SECRET'],'/slack/events',app)
 
 client = slack.WebClient(token=os.environ['SLACK_TOKEN']) #part of the slack api 
-client.chat_postMessage(channel='#test', text="you are what you don't poop")
+
+@slack_events_adapter.on('message')
+def message(payload):
+    event = payload.get('event', {})
+    channel_id = event.get('channel')
+    user_id = event.get('user')
+    text = event('text')
+
+    client.chat_postMessage(channel=channel_id, text=text)
+
 
 if (__name__) == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5002) #new favorite port number
