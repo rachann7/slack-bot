@@ -13,13 +13,15 @@ app = Flask(__name__)
 slack_events_adapter = SlackEventAdapter(os.environ['SIGNING_SECRET'],'/slack/events',app)
 
 client = slack.WebClient(token=os.environ['SLACK_TOKEN']) #part of the slack api 
+BOT_ID = client.api_call("auth.test")['user_id']
 
 @slack_events_adapter.on('message')
 def message(payload):
     event = payload.get('event', {})
     channel_id = event.get('channel')
     user_id = event.get('user')
-    text = event('text')
+    text = event.get('text')
+   
 
     client.chat_postMessage(channel=channel_id, text=text)
 
